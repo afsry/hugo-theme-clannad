@@ -11,8 +11,10 @@
 </div>
 <div class="sidebar-state">
   <div class="sidebar-state-article">
-    <div>{{ i18n "sidebar.post" }}</div>
-    {{- $posts := (where .Page.Site.RegularPages "Section" "in" .Site.Params.mainSections) -}}
+    <div>
+     <a href="{{ .Site.Params.postLink | default "#" }}" > {{ i18n "sidebar.post" }} </a>
+    </div>
+     {{- $posts := (where .Page.Site.RegularPages "Section" "in" .Site.Params.mainSections) -}}  
     <div class="sidebar-state-number">{{ len $posts }}</div>
   </div>
   <div class="sidebar-state-category">
@@ -49,14 +51,18 @@
       ></a>
       <div class='sidebar-menu-icon icon {{ if or (and (eq .icon "e62b") ($params.icon_font)) (and (eq .icon "f6ad") (not $params.icon_font)) (not .icon) }}rotate{{ end }}'>
         {{- if .icon -}}
-          &#x{{- .icon -}};
+        {{- if and (strings.Contains .icon ".") (strings.Contains .icon "/") -}}
+          <img src="{{ .icon | relURL }}" alt="{{ .name }} icon" class=""  style="height: 1em;">
         {{- else -}}
-          {{- if $params.icon_font -}}
-            &#xe62b;
-          {{- else -}}
-            &#xf6ad;
-          {{- end -}}
+          &#x{{- .icon -}};
         {{- end -}}
+      {{- else -}}
+        {{- if $params.icon_font -}}
+          &#xe62b;
+        {{- else -}}
+          &#xf6ad;
+        {{- end -}}
+      {{- end -}}
       </div>
       <div class="sidebar-menu-link">{{ i18n .name }}</div>
     </div>
